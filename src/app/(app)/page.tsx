@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { Countdown } from "@/components/countdown";
+import { RarityBadge } from "@/components/rarity-badge";
 import { Empty, Panel } from "@/components/panel";
 import { Radar } from "@/components/radar";
 import { ReliabilityBadge } from "@/components/reliability-badge";
@@ -71,6 +73,8 @@ export default async function Dashboard() {
       supabase.from("fx_rates").select("rate_date, jpy_per_eur").order("rate_date", { ascending: false }).limit(1).maybeSingle(),
       supabase.from("my_collection").select("quantite, investi_eur, valeur_totale_eur, base_valorisation"),
     ]);
+  const { data: settings } = await supabase.from("user_settings").select("hero_image_url").maybeSingle();
+  const heroImage = settings?.hero_image_url ?? null;
 
   const rate: FxRate = fx.data ? { rate_date: fx.data.rate_date, jpy_per_eur: Number(fx.data.jpy_per_eur) } : null;
   const next = releases.data?.[0];
@@ -88,9 +92,16 @@ export default async function Dashboard() {
 
       <div className="grid gap-5 lg:grid-cols-[1.65fr_1fr]">
         {/* Prochaine sortie */}
-        <section className="relative overflow-hidden rounded-[22px] border border-line bg-surface p-6 sm:p-8">
+        <section className="dive relative overflow-hidden rounded-[22px] border border-line p-6 sm:p-8">
+          {heroImage && (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={heroImage} alt="" className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-55" />
+              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,var(--surface)_0%,color-mix(in_oklab,var(--surface)_85%,transparent)_45%,transparent_100%)]" />
+            </>
+          )}
           <div className="pointer-events-none absolute -right-16 -top-16 h-72 w-72 opacity-45 sm:-right-10 sm:opacity-90 sm:-top-10 sm:h-80 sm:w-80">
-            <Radar blips={releases.data?.length ?? 0} />
+            {!heroImage && <Radar blips={releases.data?.length ?? 0} />}
           </div>
           <div className="relative">
             <p className="text-sm text-muted">Prochaine sortie</p>
@@ -124,7 +135,7 @@ export default async function Dashboard() {
               <>
                 <h2 className="mt-2 text-[1.7rem] font-semibold tracking-tight">Aucune sortie enregistrée</h2>
                 <p className="mt-3 max-w-[46ch] leading-relaxed text-muted">
-                  Le calendrier se remplira avec les sorties officielles et les estimations sourcées dès que le module Sorties sera branché.
+                  Ajoute la prochaine sortie officielle depuis la saisie : le compte à rebours démarrera automatiquement.
                 </p>
               </>
             )}
@@ -177,7 +188,7 @@ export default async function Dashboard() {
       </div>
 
       <div className="grid gap-5 md:grid-cols-2">
-        <Panel title="Dernières annonces" href="/sorties">
+        <Panel title="Dernières annonces" href="/saisie?onglet=annonce" linkLabel="Ajouter">
           {announcements.error ? <Failed message={announcements.error.message} /> : announcements.data?.length ? (
             <ul className="divide-y divide-line">
               {announcements.data.map((a) => (
@@ -198,18 +209,18 @@ export default async function Dashboard() {
             <ul className="divide-y divide-line">
               {advancePacks.data.map((p) => (
                 <li key={p.id} className="flex items-center justify-between gap-3 py-2.5">
-                  <span className="min-w-0">
+                  <Link href={`/produits/${p.id}`} className="min-w-0 hover:text-gold">
                     <span className="block truncate">{p.name_fr ?? p.name_ja}</span>
                     <span className="text-xs text-muted">
                       {PRODUCT_STATUS[p.status]}
                       {p.official_price_jpy && `, ${formatMoney(p.official_price_jpy, "JPY")} prix officiel`}
                     </span>
-                  </span>
+                  </Link>
                   <ReliabilityBadge level={p.reliability as Reliability} />
                 </li>
               ))}
             </ul>
-          ) : <Empty>Aucun Advance Pack enregistré.</Empty>}
+          ) : <Empty>Aucun Advance Pack enregistré. Ajoute-le depuis la saisie, onglet Produit.</Empty>}
         </Panel>
 
         <Panel title="Nouveautés en boutique" href="/boutiques">
@@ -282,17 +293,15 @@ export default async function Dashboard() {
             <ul className="divide-y divide-line">
               {cards.data.map((c) => (
                 <li key={c.id} className="flex items-center justify-between gap-3 py-2.5">
-                  <span className="min-w-0">
+                  <Link href={`/cartes/${c.id}`} className="min-w-0 hover:text-gold">
                     <span className="block truncate">{c.name_fr ?? c.name_ja}</span>
-                    <span className="tabular text-xs text-muted">{c.card_number}</span>
-                  </span>
-                  {c.rarity_code && (
-                    <span className="shrink-0 rounded-full bg-surface-2 px-2 py-0.5 text-xs font-semibold text-gold">{c.rarity_code}</span>
-                  )}
+                    <span className="font-display tabular text-xs text-muted">{c.card_number}</span>
+                  </Link>
+                  <RarityBadge code={c.rarity_code} />
                 </li>
               ))}
             </ul>
-          ) : <Empty>Le catalogue est vide. Il sera alimenté à partir des listes officielles à l’étape 4.</Empty>}
+          ) : <Empty>Le catalogue est vide. Ajoute des cartes ou importe une liste officielle depuis la saisie.</Empty>}
         </Panel>
       </div>
     </div>
