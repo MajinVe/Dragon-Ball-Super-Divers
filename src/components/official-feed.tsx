@@ -1,11 +1,16 @@
 import Link from "next/link";
 import { formatDate } from "@/lib/format";
 
-export type FeedItem = { id: string; kind: string; title: string; url: string; image_url: string | null; published_at: string | null; tags: string[] };
+export type FeedItem = { id: string; kind: string; title: string; title_fr: string | null; url: string; image_url: string | null; published_at: string | null; tags: string[] };
 
 export const FEED_KIND: Record<string, string> = {
   nouvelle_serie: "Nouvelle série", visuels: "Visuels", advance_pack: "Advance Pack", produit: "Produit",
   evenement: "Événement", annonce: "Jeu",
+};
+
+const serie = (tags: string[]) => {
+  const t = tags.find((x) => /\d+弾/.test(x));
+  return t ? `Série ${t.match(/\d+/)?.[0]}` : null;
 };
 
 /** Vignettes des actualités officielles : l'image reste hébergée sur le site officiel, un clic ouvre l'article. */
@@ -24,8 +29,9 @@ export function OfficialFeed({ items, compact = false }: { items: FeedItem[]; co
             <span className="font-display absolute left-2 top-2 -rotate-2 bg-orange px-1.5 py-0.5 text-xs text-[#141414]">{FEED_KIND[it.kind] ?? "Actu"}</span>
           </div>
           <div className="space-y-1 p-3">
-            <p className="text-xs text-muted">{it.published_at ? formatDate(it.published_at) : ""}{it.tags.find((t) => /弾/.test(t)) ? ` · ${it.tags.find((t) => /弾/.test(t))}` : ""}</p>
-            <p className="line-clamp-2 text-sm font-medium leading-snug group-hover:text-gold">{it.title}</p>
+            <p className="text-xs text-muted">{it.published_at ? formatDate(it.published_at) : ""}{serie(it.tags) ? ` · ${serie(it.tags)}` : ""}</p>
+            <p className="line-clamp-2 text-sm font-medium leading-snug group-hover:text-gold">{it.title_fr ?? it.title}</p>
+            {it.title_fr && <p className="line-clamp-1 text-xs text-muted" lang="ja">{it.title}</p>}
           </div>
         </a>
       ))}
