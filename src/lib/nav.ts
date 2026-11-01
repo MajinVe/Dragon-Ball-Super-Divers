@@ -1,9 +1,10 @@
 import {
-  Bell, BookOpenCheck, CalendarDays, ChartLine, Eye, Gauge, Layers, Library, PackageOpen, PencilLine, Settings, Store,
+  Bell, Inbox, BookOpenCheck, CalendarDays, ChartLine, Eye, Gauge, Layers, Library, PackageOpen, PencilLine, Settings, Store,
 } from "lucide-react";
 
 export const NAV = [
   { href: "/", label: "Tableau de bord", short: "Accueil", icon: Gauge, mobile: true },
+  { href: "/veille", label: "À valider", short: "À valider", icon: Inbox },
   { href: "/sorties", label: "Sorties", short: "Sorties", icon: CalendarDays, mobile: true },
   { href: "/series", label: "Séries", short: "Séries", icon: Library },
   { href: "/cartes", label: "Cartes de borne", short: "Cartes", icon: Layers, mobile: true },
