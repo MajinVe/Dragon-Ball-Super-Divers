@@ -1,10 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Chakra_Petch, Instrument_Sans, Zen_Kaku_Gothic_New } from "next/font/google";
+import { Dela_Gothic_One, Instrument_Sans, Zen_Kaku_Gothic_New } from "next/font/google";
 import { Providers } from "@/components/providers";
 import "./globals.css";
 
 const latin = Instrument_Sans({ subsets: ["latin"], variable: "--font-latin", display: "swap" });
-const hud = Chakra_Petch({ weight: ["500", "600", "700"], subsets: ["latin"], variable: "--font-hud", display: "swap" });
+const manga = Dela_Gothic_One({ weight: "400", subsets: ["latin"], variable: "--font-manga", display: "swap" });
 const jp = Zen_Kaku_Gothic_New({
   weight: ["400", "500", "700"],
   subsets: ["latin"],
@@ -24,14 +24,14 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#11121a" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f0f13" },
     { media: "(prefers-color-scheme: light)", color: "#f3f4f6" },
   ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" suppressHydrationWarning className={`${latin.variable} ${hud.variable} ${jp.variable}`}>
+    <html lang="fr" suppressHydrationWarning className={`${latin.variable} ${manga.variable} ${jp.variable}`}>
       <body className="min-h-dvh font-sans">
         <Providers>{children}</Providers>
       </body>

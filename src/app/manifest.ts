@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Veille et collection Dragon Ball Super Divers",
     start_url: "/",
     display: "standalone",
-    background_color: "#11121a",
-    theme_color: "#11121a",
+    background_color: "#0f0f13",
+    theme_color: "#0f0f13",
     lang: "fr",
     icons: [
       { src: "/icon.svg", sizes: "any", type: "image/svg+xml" },
