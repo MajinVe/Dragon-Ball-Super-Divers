@@ -3,7 +3,7 @@ export function Wordmark({ logoUrl, large = false }: { logoUrl?: string | null; 
     return (
       <div className="flex items-center gap-2.5">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={logoUrl} alt="Accueil" className={large ? "h-24 w-auto max-w-[220px] object-contain" : "h-12 w-auto max-w-[190px] object-contain"} />
+        <img src={logoUrl} alt="Accueil" className={large ? "h-20 w-auto max-w-[220px] object-contain" : "h-12 w-auto max-w-[190px] object-contain"} />
       </div>
     );
   }

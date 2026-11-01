@@ -5,8 +5,8 @@ import { Wordmark } from "./wordmark";
 
 export function Sidebar({ email, logoUrl, pending = 0 }: { email: string; logoUrl?: string | null; pending?: number }) {
   return (
-    <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r-2 border-[var(--ink-line)] bg-surface px-3 py-5 lg:flex">
-      <div className="px-2 pb-6">
+    <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r-2 border-[var(--ink-line)] bg-surface px-3 py-4 lg:flex">
+      <div className="px-2 pb-4">
         <Wordmark logoUrl={logoUrl} large />
       </div>
       <nav aria-label="Navigation principale" className="flex-1 overflow-y-auto">
