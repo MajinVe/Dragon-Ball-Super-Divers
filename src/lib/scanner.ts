@@ -40,6 +40,7 @@ async function allowedByRobots(url: URL) {
 }
 
 function classify(title: string, tags: string[] = []) {
+  if (/カード(情報|公開|ラインナップ|リスト)|新カード|ビジュアル|イラスト公開|PV|映像/.test(title)) return "visuels";
   if (/アドバンスパック|advance\s*pack/i.test(title)) return "advance_pack";
   if (/ファーストパック|first\s*pack/i.test(title)) return "produit";
   if (/\d+弾(の)?(稼働|最新ゲーム情報|カードリスト|ラインナップ)|新弾/.test(title)) return "nouvelle_serie";
