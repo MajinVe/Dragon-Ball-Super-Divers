@@ -15,7 +15,7 @@ export function Countdown({ date }: { date: string }) {
   if (now === null) return <div className="h-[4.5rem]" aria-hidden />;
 
   const diff = Math.max(0, target - now);
-  if (diff === 0) return <p className="text-2xl font-semibold text-gold">Disponible au Japon aujourd’hui</p>;
+  if (diff === 0) return <p className="font-display text-2xl text-gold">Disponible au Japon aujourd’hui</p>;
 
   const s = Math.floor(diff / 1000);
   const parts = [
@@ -29,10 +29,10 @@ export function Countdown({ date }: { date: string }) {
     <div className="flex gap-5 sm:gap-7" role="timer" aria-label={`${parts[0].v} jours et ${parts[1].v} heures avant la sortie`}>
       {parts.map((p, i) => (
         <div key={p.l} className={i === 3 ? "hidden sm:block" : undefined}>
-          <div className="font-display tabular text-[2.6rem] font-semibold leading-none tracking-tight sm:text-[3.4rem]">
+          <div className="font-display tabular rounded-[4px] border-2 border-[var(--ink-line)] bg-bg px-2.5 py-1.5 text-[2.3rem] leading-none shadow-[3px_3px_0_#000] sm:text-[3rem]">
             {String(p.v).padStart(2, "0")}
           </div>
-          <div className="mt-1.5 text-xs text-muted">{p.l}</div>
+          <div className="mt-2 text-center text-xs text-muted">{p.l}</div>
         </div>
       ))}
     </div>

@@ -12,13 +12,13 @@ export type CardRow = {
 
 export function CardTile({ card, value }: { card: CardRow; value?: number | null }) {
   return (
-    <Link href={`/cartes/${card.id}`} className="group block overflow-hidden rounded-xl border border-line bg-surface transition-colors hover:border-gold/60">
+    <Link href={`/cartes/${card.id}`} className="group block overflow-hidden panel panel-sm transition-colors panel-hover">
       <div className="relative aspect-[5/7] bg-surface-2">
         {card.image_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={card.image_url} alt="" loading="lazy" className="h-full w-full object-cover" />
         ) : (
-          <div className="flex h-full flex-col items-center justify-center gap-2 p-3 text-center">
+          <div className="tone flex h-full flex-col items-center justify-center gap-2 p-3 text-center">
             <span className="font-display tabular text-lg text-muted">{card.card_number}</span>
             <span className="text-xs text-muted">Pas d’image enregistrée</span>
           </div>

@@ -5,7 +5,7 @@ import { Wordmark } from "./wordmark";
 
 export function Sidebar({ email, logoUrl }: { email: string; logoUrl?: string | null }) {
   return (
-    <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-line bg-surface px-3 py-5 lg:flex">
+    <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r-2 border-[var(--ink-line)] bg-surface px-3 py-5 lg:flex">
       <div className="px-3 pb-6">
         <Wordmark logoUrl={logoUrl} />
       </div>

@@ -10,7 +10,7 @@ export function RarityBadge({ code, parallel = false }: { code: string | null; p
   return (
     <span className="inline-flex shrink-0 items-center gap-1">
       {code && (
-        <span className={`font-display inline-flex items-center rounded-md border px-1.5 py-0.5 text-[0.72rem] font-semibold ${STYLE[code] ?? "border-line text-muted"}`}>
+        <span className={`font-display inline-flex -rotate-3 items-center rounded-[3px] border-2 px-1.5 py-0.5 text-[0.72rem] shadow-[2px_2px_0_#000] ${STYLE[code] ?? "border-line text-muted"}`}>
           {code}
         </span>
       )}

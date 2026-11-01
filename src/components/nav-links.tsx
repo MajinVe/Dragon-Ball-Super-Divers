@@ -19,8 +19,8 @@ export function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
               href={href}
               onClick={onNavigate}
               aria-current={active ? "page" : undefined}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-[0.94rem] transition-colors ${
-                active ? "bg-surface-2 text-ink" : "text-muted hover:bg-surface-2/60 hover:text-ink"
+              className={`flex items-center gap-3 rounded-[4px] px-3 py-2 text-[0.94rem] transition-colors ${
+                active ? "bg-surface-2 text-ink shadow-[inset_4px_0_0_var(--orange)]" : "text-muted hover:bg-surface-2/60 hover:text-ink"
               }`}
             >
               <Icon size={18} aria-hidden className={active ? "text-gold" : undefined} />
