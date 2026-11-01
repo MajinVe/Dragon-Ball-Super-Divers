@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { translateJaToFr } from "./translate";
 
 /**
  * Moteur de veille : lit les sources configurées une fois, n'enregistre que le titre,
@@ -151,9 +152,25 @@ export async function scanSource(supabase: SupabaseClient, src: Source) {
   }
 }
 
+/** Traduit en français les titres pas encore traduits (par lots, pour rester dans les quotas gratuits). */
+export async function translatePending(supabase: SupabaseClient, limit = 40) {
+  const { data } = await supabase.from("detections").select("id, title").is("title_fr", null)
+    .order("detected_at", { ascending: false }).limit(limit);
+  if (!data?.length) return 0;
+  const fr = await translateJaToFr(data.map((d) => d.title));
+  let n = 0;
+  for (const [i, d] of data.entries()) {
+    if (!fr[i]) continue;
+    await supabase.from("detections").update({ title_fr: fr[i] }).eq("id", d.id);
+    n++;
+  }
+  return n;
+}
+
 export async function scanAll(supabase: SupabaseClient) {
   const { data: sources } = await supabase.from("watch_sources").select("*").eq("active", true);
   const results = [];
   for (const s of (sources ?? []) as Source[]) results.push(await scanSource(supabase, s));
+  await translatePending(supabase);
   return results;
 }
