@@ -8,24 +8,27 @@ import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
-const TYPES = ["advance_pack", "first_pack", "booster", "display", "coffret", "edition_limitee", "evenementiel", "livre"] as const;
+const TYPES = ["advance_pack", "first_pack", "booster", "display", "coffret", "edition_limitee", "evenementiel", "livre", "accessoire", "autre"] as const;
 
 export default async function AdvancePacksPage({ searchParams }: { searchParams: Promise<{ type?: string }> }) {
-  const { type = "advance_pack" } = await searchParams;
+  const { type = "tous" } = await searchParams;
   const supabase = await createClient();
   const fx = await getLatestFx(supabase);
-  const { data: products, error } = await supabase.from("products")
+  let query = supabase.from("products")
     .select("id, type, name_ja, name_fr, status, official_price_jpy, cards_per_unit, image_url, reliability, set:card_sets(code), product_cards(is_exclusive), product_listings(price, currency, availability, is_active), release_calendar(event_date, precision, is_estimate, region)")
-    .eq("type", type).order("created_at", { ascending: false });
+    .order("created_at", { ascending: false });
+  if (type !== "tous") query = query.eq("type", type);
+  const { data: products, error } = await query;
 
   return (
     <div>
-      <PageHeader title={type === "advance_pack" ? "Advance Packs" : PRODUCT_TYPE_LABEL[type] ?? "Produits"}
+      <PageHeader title={type === "tous" ? "Produits et packs" : PRODUCT_TYPE_LABEL[type] ?? "Produits"}
         intro="Produits scellés suivis séparément des cartes de borne : prix officiel japonais, contenu, cartes exclusives et offres des boutiques.">
         <Link href="/saisie?onglet=produit" className="rounded-lg border border-line px-3 py-2 text-sm hover:border-gold">Ajouter un produit</Link>
       </PageHeader>
 
       <div className="mb-6 flex flex-wrap gap-2">
+        <Link href="/advance-packs" className={`rounded-full border px-3 py-1 text-sm ${type === "tous" ? "border-gold text-gold" : "border-line text-muted hover:text-ink"}`}>Tous</Link>
         {TYPES.map((t) => (
           <Link key={t} href={`/advance-packs?type=${t}`} className={`rounded-full border px-3 py-1 text-sm ${type === t ? "border-gold text-gold" : "border-line text-muted hover:text-ink"}`}>{PRODUCT_TYPE_LABEL[t]}</Link>
         ))}
@@ -57,7 +60,7 @@ export default async function AdvancePacksPage({ searchParams }: { searchParams:
                   <p className="font-medium group-hover:text-gold">{p.name_fr ?? p.name_ja}</p>
                   <ReliabilityBadge level={p.reliability as Reliability} />
                 </div>
-                <p className="text-sm text-muted">{PRODUCT_STATUS_LABEL[p.status]}{(p.set as unknown as { code: string } | null)?.code ? ` · ${(p.set as unknown as { code: string }).code}` : ""}{rel ? ` · ${formatDate(rel.event_date, rel.precision)}${rel.is_estimate ? " (estimation)" : ""}` : ""}</p>
+                <p className="text-sm text-muted">{PRODUCT_TYPE_LABEL[p.type]} · {PRODUCT_STATUS_LABEL[p.status]}{(p.set as unknown as { code: string } | null)?.code ? ` · ${(p.set as unknown as { code: string }).code}` : ""}{rel ? ` · ${formatDate(rel.event_date, rel.precision)}${rel.is_estimate ? " (estimation)" : ""}` : ""}</p>
                 <p className="tabular text-sm">
                   {p.official_price_jpy ? <>Prix officiel {formatMoney(p.official_price_jpy, "JPY")}{officialEur !== null && <span className="text-muted"> ≈ {formatMoney(officialEur, "EUR")}</span>}</> : <span className="text-muted">Prix officiel non renseigné</span>}
                 </p>
