@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ActionForm } from "@/components/action-form";
 import { Field, Grid } from "@/components/fields";
 import { PageHeader } from "@/components/page-header";
@@ -13,6 +14,18 @@ export const dynamic = "force-dynamic";
 const KIND: Record<string, string> = {
   nouvelle_serie: "Nouvelle série", advance_pack: "Advance Pack", produit: "Produit", evenement: "Événement", annonce: "Annonce",
 };
+
+function prefillLink(d: { id: string; kind: string; title: string; url: string; published_at: string | null }) {
+  const base = { detection: d.id, source: d.url, nom: d.title, date: d.published_at ?? "" };
+  if (d.kind === "nouvelle_serie") {
+    const n = d.title.match(/(\d+)弾/)?.[1];
+    return { label: "Créer la série", href: `/saisie?${new URLSearchParams({ onglet: "serie", ...base, ...(n ? { code: `SDV${n}`, num: n } : {}) })}` };
+  }
+  if (d.kind === "advance_pack" || d.kind === "produit") {
+    return { label: "Créer le produit", href: `/saisie?${new URLSearchParams({ onglet: "produit", type: d.kind === "advance_pack" ? "advance_pack" : "autre", ...base })}` };
+  }
+  return null;
+}
 
 export default async function VeillePage() {
   const supabase = await createClient();
@@ -46,6 +59,7 @@ export default async function VeillePage() {
             {pending.map((d) => {
               const src = d.source as { name: string; store_id: string | null } | null;
               const isOffer = d.price != null && src?.store_id;
+              const prefill = isOffer ? null : prefillLink(d);
               return (
                 <li key={d.id} className="panel p-4">
                   <div className="flex gap-4">
@@ -67,7 +81,7 @@ export default async function VeillePage() {
                   </div>
                   {admin && (
                     <div className="mt-3 grid gap-3 border-t-2 border-dashed border-line pt-3 md:grid-cols-[1fr_auto] md:items-end">
-                      <ActionForm action={acceptDetection} submitLabel="Valider et remplir">
+                      <ActionForm action={acceptDetection} submitLabel={prefill ? "Garder comme simple annonce" : "Valider et remplir"}>
                         <input type="hidden" name="id" value={d.id} />
                         {isOffer ? (
                           <Grid>
@@ -83,10 +97,15 @@ export default async function VeillePage() {
                           <Field label="Titre en français (facultatif)"><input name="title_fr" className="field" /></Field>
                         )}
                       </ActionForm>
-                      <form action={rejectDetection}>
-                        <input type="hidden" name="id" value={d.id} />
-                        <button className="w-full rounded-[4px] border-2 border-down/60 px-4 py-2.5 text-sm text-down hover:bg-down/10">Fausse info / ignorer</button>
-                      </form>
+                      <div className="flex flex-col gap-2">
+                        {prefill && (
+                          <Link href={prefill.href} className="btn-main px-4 py-2.5 text-center text-sm">{prefill.label}</Link>
+                        )}
+                        <form action={rejectDetection}>
+                          <input type="hidden" name="id" value={d.id} />
+                          <button className="w-full rounded-[4px] border-2 border-down/60 px-4 py-2.5 text-sm text-down hover:bg-down/10">Fausse info / ignorer</button>
+                        </form>
+                      </div>
                     </div>
                   )}
                 </li>
