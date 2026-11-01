@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Countdown } from "@/components/countdown";
 import { RarityBadge } from "@/components/rarity-badge";
+import { FeedHeader, OfficialFeed } from "@/components/official-feed";
+import { getOfficialFeed, refreshOfficialIfStale } from "@/lib/feed";
 import { Empty, Panel } from "@/components/panel";
 import { ReliabilityBadge } from "@/components/reliability-badge";
 import {
@@ -43,6 +45,7 @@ function Failed({ message }: { message: string }) {
 
 export default async function Dashboard() {
   const supabase = await createClient();
+  await refreshOfficialIfStale(supabase);
 
   const [releases, announcements, newListings, priceMoves, preorders, advancePacks, cards, fx, collection] =
     await Promise.all([
@@ -73,6 +76,8 @@ export default async function Dashboard() {
       supabase.from("my_collection").select("quantite, investi_eur, valeur_totale_eur, base_valorisation"),
     ]);
   const { data: settings } = await supabase.from("user_settings").select("hero_image_url").maybeSingle();
+  const feed = await getOfficialFeed(supabase, 12);
+  const visuals = await getOfficialFeed(supabase, 8, "visuels");
   const { count: pendingCount } = await supabase.from("detections").select("id", { count: "exact", head: true }).eq("status", "en_attente");
   const heroImage = settings?.hero_image_url ?? null;
 
@@ -191,6 +196,18 @@ export default async function Dashboard() {
           </Panel>
         </div>
       </div>
+
+      <section>
+        <FeedHeader title="Actus officielles" href="/sorties" />
+        <OfficialFeed items={feed} compact />
+      </section>
+
+      {visuals.length > 0 && (
+        <section>
+          <FeedHeader title="Nouveaux visuels" href="/sorties?actu=visuels" />
+          <OfficialFeed items={visuals} compact />
+        </section>
+      )}
 
       <div className="grid gap-5 md:grid-cols-2">
         <Panel title="Dernières annonces" href="/saisie?onglet=annonce" linkLabel="Ajouter">
