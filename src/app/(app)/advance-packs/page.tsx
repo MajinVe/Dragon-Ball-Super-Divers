@@ -45,7 +45,7 @@ export default async function AdvancePacksPage({ searchParams }: { searchParams:
           const rel = (p.release_calendar as { event_date: string; precision: string; is_estimate: boolean; region: string }[]).find((r) => r.region === "JP");
           const officialEur = jpyToEur(p.official_price_jpy, fx);
           return (
-            <Link key={p.id} href={`/produits/${p.id}`} className="group flex gap-4 rounded-2xl border border-line bg-surface p-4 hover:border-gold/60">
+            <Link key={p.id} href={`/produits/${p.id}`} className="group flex gap-4 panel p-4 panel-hover">
               <div className="h-28 w-24 shrink-0 overflow-hidden rounded-lg bg-surface-2">
                 {p.image_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
