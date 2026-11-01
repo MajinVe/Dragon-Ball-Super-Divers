@@ -49,6 +49,23 @@ async function ensureRarity(supabase: SupabaseClient, code: string | null) {
   return c;
 }
 
+/** Marque la détection d'origine comme validée et garde une trace de l'annonce. */
+async function closeDetection(supabase: SupabaseClient, f: FormData, link: { set_id?: string | null; product_id?: string | null; kind: string }) {
+  const id = s(f, "detection_id");
+  if (!id) return;
+  const { data: d } = await supabase.from("detections").select("title, url, image_url, published_at, reliability").eq("id", id).maybeSingle();
+  if (d) {
+    await supabase.from("announcements").upsert({
+      game: "dbsdv", kind: link.kind, title_ja: d.title, url: d.url, image_url: d.image_url, published_at: d.published_at,
+      reliability: d.reliability, set_id: link.set_id ?? null, product_id: link.product_id ?? null, content_hash: d.url,
+      last_verified_at: new Date().toISOString(),
+    }, { onConflict: "content_hash" });
+  }
+  await supabase.from("detections").update({ status: "validee", reviewed_at: new Date().toISOString() }).eq("id", id);
+  revalidatePath("/veille");
+  revalidatePath("/", "layout");
+}
+
 async function run(fn: () => Promise<ActionState>): Promise<ActionState> {
   try { return await fn(); } catch (e) { return fail(e instanceof Error ? e.message : String(e)); }
 }
@@ -60,13 +77,14 @@ export async function createSet(_: ActionState, f: FormData) {
     const code = s(f, "code")?.toUpperCase();
     const name_ja = s(f, "name_ja");
     if (!code || !name_ja) return fail("Le code et le nom japonais sont obligatoires.");
-    const { error } = await supabase.from("card_sets").upsert({
+    const { data: setRow, error } = await supabase.from("card_sets").upsert({
       game: "dbsdv", code, name_ja, name_fr: s(f, "name_fr"), series_number: n(f, "series_number"),
       total_cards: n(f, "total_cards"), image_url: s(f, "image_url"),
       source_id: src.id, reliability: src.reliability, published_at: s(f, "published_at"),
       last_verified_at: new Date().toISOString(),
-    }, { onConflict: "game,code" });
+    }, { onConflict: "game,code" }).select("id").single();
     if (error) return fail(error.message);
+    await closeDetection(supabase, f, { set_id: setRow.id, kind: "nouvelle_serie" });
     revalidatePath("/series");
     return { ok: true, message: `Série ${code} enregistrée.` };
   });
@@ -156,6 +174,7 @@ export async function createProduct(_: ActionState, f: FormData) {
         linked = cards.length;
       }
     }
+    await closeDetection(supabase, f, { product_id: data.id, kind: type === "advance_pack" ? "advance_pack" : "produit" });
     revalidatePath("/advance-packs");
     const missing = numbers.length - linked;
     return { ok: true, message: `Produit enregistré${linked ? `, ${linked} carte(s) exclusive(s) liée(s)` : ""}${missing > 0 ? `, ${missing} numéro(s) introuvable(s) dans le catalogue` : ""}.` };

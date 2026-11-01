@@ -20,8 +20,11 @@ const TABS = [
   ["annonce", "Annonce"],
 ] as const;
 
-export default async function SaisiePage({ searchParams }: { searchParams: Promise<{ onglet?: string; carte?: string }> }) {
-  const { onglet = "assistee", carte } = await searchParams;
+type Prefill = { onglet?: string; carte?: string; code?: string; num?: string; nom?: string; source?: string; date?: string; detection?: string; type?: string };
+
+export default async function SaisiePage({ searchParams }: { searchParams: Promise<Prefill> }) {
+  const sp = await searchParams;
+  const { onglet = "assistee", carte } = sp;
   const supabase = await createClient();
   const admin = await isAdmin(supabase);
 
@@ -53,6 +56,7 @@ export default async function SaisiePage({ searchParams }: { searchParams: Promi
 
   return (
     <div>
+      {sp.detection && <p className="bubble mb-6 text-sm">Formulaire pré-rempli à partir d’une détection. Vérifie chaque champ : à l’enregistrement, la détection sera marquée comme validée.</p>}
       <PageHeader title="Saisie" intro="Chaque information est enregistrée avec sa source et son niveau de fiabilité. Rien n’est inventé : un champ inconnu reste vide." />
 
       <nav className="mb-6 flex gap-1 overflow-x-auto border-b border-line" aria-label="Type de saisie">
@@ -70,15 +74,16 @@ export default async function SaisiePage({ searchParams }: { searchParams: Promi
         {onglet === "serie" && (
           <ActionForm action={createSet} submitLabel="Enregistrer la série">
             <Grid>
-              <Field label="Code" hint="Tel qu’il apparaît dans les numéros, ex. SDV8"><input name="code" required className="field" /></Field>
-              <Field label="Numéro de série (弾)"><input name="series_number" inputMode="numeric" className="field" /></Field>
-              <Field label="Nom japonais officiel"><input name="name_ja" required className="field" /></Field>
-              <Field label="Nom français (si disponible)"><input name="name_fr" className="field" /></Field>
+              <Field label="Code" hint="Tel qu’il apparaît dans les numéros, ex. SDV8"><input name="code" required defaultValue={sp.code ?? ""} className="field" /></Field>
+              <Field label="Numéro de série (弾)"><input name="series_number" inputMode="numeric" defaultValue={sp.num ?? ""} className="field" /></Field>
+              <Field label="Nom japonais officiel" hint={sp.nom ? `Titre de l’actualité : ${sp.nom}` : undefined}><input name="name_ja" required defaultValue={sp.num ? `${sp.num}弾` : ""} className="field" /></Field>
+              <Field label="Nom français (si disponible)"><input name="name_fr" defaultValue={sp.num ? `Série ${sp.num}` : ""} className="field" /></Field>
               <Field label="Nombre total de cartes annoncé"><input name="total_cards" inputMode="numeric" className="field" /></Field>
-              <Field label="Date de publication de l’info"><input name="published_at" type="date" className="field" /></Field>
+              <Field label="Date de publication de l’info"><input name="published_at" type="date" defaultValue={sp.date ?? ""} className="field" /></Field>
             </Grid>
             <Field label="Visuel (adresse de l’image officielle)"><input name="image_url" type="url" className="field" /></Field>
-            <SourceFields />
+            {sp.detection && <input type="hidden" name="detection_id" value={sp.detection} />}
+            <SourceFields defaultUrl={sp.source ?? ""} />
             <p className="text-xs text-muted">La date de sortie s’ajoute dans l’onglet « Date de sortie », pour distinguer officiel et estimation.</p>
           </ActionForm>
         )}
@@ -123,12 +128,12 @@ export default async function SaisiePage({ searchParams }: { searchParams: Promi
           <ActionForm action={createProduct} submitLabel="Enregistrer le produit">
             <Grid>
               <Field label="Type">
-                <select name="type" defaultValue="advance_pack" className="field">
+                <select name="type" defaultValue={sp.type ?? "advance_pack"} className="field">
                   {Object.entries(PRODUCT_TYPE_LABEL).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
                 </select>
               </Field>
               <Field label="Série liée"><SetSelect /></Field>
-              <Field label="Nom japonais officiel"><input name="name_ja" required className="field" /></Field>
+              <Field label="Nom japonais officiel"><input name="name_ja" required defaultValue={onglet === "produit" ? sp.nom ?? "" : ""} className="field" /></Field>
               <Field label="Nom français"><input name="name_fr" className="field" /></Field>
               <Field label="Prix officiel japonais (¥, TTC)"><input name="official_price_jpy" inputMode="numeric" className="field" /></Field>
               <Field label="Cartes par unité"><input name="cards_per_unit" inputMode="numeric" className="field" /></Field>
@@ -144,7 +149,8 @@ export default async function SaisiePage({ searchParams }: { searchParams: Promi
               <input name="exclusive_cards" className="field" />
             </Field>
             <Field label="Visuel (adresse)"><input name="image_url" type="url" className="field" /></Field>
-            <SourceFields />
+            {sp.detection && <input type="hidden" name="detection_id" value={sp.detection} />}
+            <SourceFields defaultUrl={sp.source ?? ""} />
           </ActionForm>
         )}
 
