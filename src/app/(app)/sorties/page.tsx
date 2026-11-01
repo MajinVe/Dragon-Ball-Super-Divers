@@ -67,7 +67,7 @@ export default async function SortiesPage({ searchParams }: { searchParams: Prom
                 const name = r.set ? `${r.set.code} · ${r.set.name_fr ?? r.set.name_ja}` : r.product ? (r.product.name_fr ?? r.product.name_ja) : "Sans nom";
                 const href = r.set ? `/series/${encodeURIComponent(r.set.code)}` : r.product ? `/produits/${r.product.id}` : null;
                 return (
-                  <li key={r.id} className="relative rounded-xl border border-line bg-surface p-4">
+                  <li key={r.id} className="relative panel panel-sm p-4">
                     <span className={`absolute -left-[27px] top-5 h-3 w-3 rounded-full border-2 border-bg ${r.is_estimate ? "bg-orange" : "bg-gold"}`} aria-hidden />
                     <div className="flex flex-wrap items-start justify-between gap-2">
                       <div className="min-w-0">
