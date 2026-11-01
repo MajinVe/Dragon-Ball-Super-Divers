@@ -7,7 +7,7 @@ export default function LoginPage() {
   const [error, action, pending] = useActionState(signIn, null);
   return (
     <main className="grid min-h-dvh place-items-center px-5">
-      <form action={action} className="w-full max-w-sm space-y-5 rounded-2xl border border-line bg-surface p-7">
+      <form action={action} className="w-full max-w-sm space-y-5 panel p-7">
         <Wordmark />
         <h1 className="text-xl font-semibold tracking-tight">Connexion</h1>
         <label className="block space-y-1.5">
@@ -22,7 +22,7 @@ export default function LoginPage() {
         </label>
         {error && <p role="alert" className="text-sm text-down">{error}</p>}
         <button disabled={pending}
-          className="w-full rounded-lg bg-gold py-2.5 font-semibold text-[#16171a] transition-opacity disabled:opacity-60">
+          className="btn-main w-full py-2.5 disabled:opacity-60">
           {pending ? "Connexion…" : "Se connecter"}
         </button>
       </form>
