@@ -20,11 +20,11 @@ const RELIABILITY = [
 ] as const;
 
 /** Bloc commun à toute saisie : d'où vient l'information et quel crédit lui accorder. */
-export function SourceFields({ defaultReliability = "officiel" }: { defaultReliability?: string }) {
+export function SourceFields({ defaultReliability = "officiel", defaultUrl = "" }: { defaultReliability?: string; defaultUrl?: string }) {
   return (
     <Grid>
       <Field label="Adresse de la source" hint="Page où l’information est publiée. Obligatoire sauf pour « Non vérifié ».">
-        <input name="source_url" type="url" className="field" placeholder="https://" />
+        <input name="source_url" type="url" defaultValue={defaultUrl} className="field" placeholder="https://" />
       </Field>
       <Field label="Fiabilité">
         <select name="reliability" defaultValue={defaultReliability} className="field">
