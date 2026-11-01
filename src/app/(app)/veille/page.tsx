@@ -15,8 +15,8 @@ const KIND: Record<string, string> = {
   nouvelle_serie: "Nouvelle série", visuels: "Visuels", advance_pack: "Advance Pack", produit: "Produit", evenement: "Événement", annonce: "Annonce",
 };
 
-function prefillLink(d: { id: string; kind: string; title: string; url: string; published_at: string | null }) {
-  const base = { detection: d.id, source: d.url, nom: d.title, date: d.published_at ?? "" };
+function prefillLink(d: { id: string; kind: string; title: string; title_fr: string | null; url: string; published_at: string | null }) {
+  const base = { detection: d.id, source: d.url, nom: d.title, ...(d.title_fr ? { nomfr: d.title_fr } : {}), date: d.published_at ?? "" };
   if (d.kind === "nouvelle_serie") {
     const n = d.title.match(/(\d+)弾/)?.[1];
     return { label: "Créer la série", href: `/saisie?${new URLSearchParams({ onglet: "serie", ...base, ...(n ? { code: `SDV${n}`, num: n } : {}) })}` };
@@ -73,7 +73,8 @@ export default async function VeillePage() {
                         <ReliabilityBadge level={d.reliability as Reliability} />
                         <span className="text-muted">{src?.name} · {d.published_at ? formatDate(d.published_at) : `détecté ${formatRelative(d.detected_at)}`}</span>
                       </div>
-                      <a href={d.url} target="_blank" rel="noreferrer" className="mt-1.5 block font-medium leading-snug hover:text-gold">{d.title}</a>
+                      <a href={d.url} target="_blank" rel="noreferrer" className="mt-1.5 block font-medium leading-snug hover:text-gold">{d.title_fr ?? d.title}</a>
+                      {d.title_fr && <p className="text-xs text-muted" lang="ja">{d.title}</p>}
                       {d.price != null && (
                         <p className="tabular mt-1 text-sm">{formatMoney(d.price, (d.currency ?? "EUR") as Currency)} · {d.available === false ? "rupture" : "disponible"}</p>
                       )}
@@ -94,7 +95,7 @@ export default async function VeillePage() {
                             <Field label="ou à la carte (numéro)"><input name="card_number" className="field" placeholder="SDV13-045" /></Field>
                           </Grid>
                         ) : (
-                          <Field label="Titre en français (facultatif)"><input name="title_fr" className="field" /></Field>
+                          <Field label="Titre en français (traduction automatique, modifiable)"><input name="title_fr" defaultValue={d.title_fr ?? ""} className="field" /></Field>
                         )}
                       </ActionForm>
                       <div className="flex flex-col gap-2">
