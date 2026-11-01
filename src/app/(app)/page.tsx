@@ -73,6 +73,7 @@ export default async function Dashboard() {
       supabase.from("my_collection").select("quantite, investi_eur, valeur_totale_eur, base_valorisation"),
     ]);
   const { data: settings } = await supabase.from("user_settings").select("hero_image_url").maybeSingle();
+  const { count: pendingCount } = await supabase.from("detections").select("id", { count: "exact", head: true }).eq("status", "en_attente");
   const heroImage = settings?.hero_image_url ?? null;
 
   const rate: FxRate = fx.data ? { rate_date: fx.data.rate_date, jpy_per_eur: Number(fx.data.jpy_per_eur) } : null;
@@ -88,6 +89,13 @@ export default async function Dashboard() {
   return (
     <div className="space-y-5">
       <h1 className="sr-only">Tableau de bord</h1>
+
+      {(pendingCount ?? 0) > 0 && (
+        <Link href="/veille" className="panel panel-hover flex items-center justify-between gap-3 bg-orange px-5 py-3 text-[#141414]">
+          <span className="font-display text-lg">{pendingCount} nouveauté{(pendingCount ?? 0) > 1 ? "s" : ""} détectée{(pendingCount ?? 0) > 1 ? "s" : ""} à valider</span>
+          <span className="text-sm font-semibold">Voir</span>
+        </Link>
+      )}
 
       <div className="grid gap-5 lg:grid-cols-[1.65fr_1fr]">
         {/* Prochaine sortie */}

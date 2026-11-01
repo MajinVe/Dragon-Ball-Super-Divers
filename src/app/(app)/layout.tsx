@@ -10,12 +10,13 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const email = String(data.claims.email ?? "");
   const { data: settings } = await supabase.from("user_settings").select("logo_url").maybeSingle();
   const logoUrl = settings?.logo_url ?? null;
+  const { count: pending } = await supabase.from("detections").select("id", { count: "exact", head: true }).eq("status", "en_attente");
 
   return (
     <div className="flex min-h-dvh">
-      <Sidebar email={email} logoUrl={logoUrl} />
+      <Sidebar email={email} logoUrl={logoUrl} pending={pending ?? 0} />
       <div className="min-w-0 flex-1">
-        <MobileNav logoUrl={logoUrl} />
+        <MobileNav logoUrl={logoUrl} pending={pending ?? 0} />
         <main className="mx-auto max-w-[1180px] px-4 pb-28 pt-6 sm:px-6 lg:px-10 lg:pb-12 lg:pt-10">{children}</main>
       </div>
     </div>
