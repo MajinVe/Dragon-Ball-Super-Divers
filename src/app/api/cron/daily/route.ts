@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { scanAll } from "@/lib/scanner";
 import { createServiceClient } from "@/lib/supabase/server";
 
 const ECB_URL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml";
@@ -55,6 +56,8 @@ export async function GET(request: NextRequest) {
 
   const { data: snapshots, error: snapErr } = await supabase.rpc("snapshot_portfolios");
   report.snapshots = snapErr ? `erreur : ${snapErr.message}` : snapshots;
+
+  report.veille = await scanAll(supabase);
 
   const failed = "fx_error" in report || snapErr;
   return NextResponse.json(report, { status: failed ? 500 : 200 });
