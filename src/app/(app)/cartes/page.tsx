@@ -56,7 +56,7 @@ export default async function CartesPage({ searchParams }: { searchParams: Promi
         <Link href="/saisie?onglet=carte" className="rounded-lg border border-line px-3 py-2 text-sm hover:border-gold">Ajouter une carte</Link>
       </PageHeader>
 
-      <form className="mb-6 grid gap-3 rounded-2xl border border-line bg-surface p-4 sm:grid-cols-2 lg:grid-cols-4" role="search">
+      <form className="mb-6 grid gap-3 panel p-4 sm:grid-cols-2 lg:grid-cols-4" role="search">
         <label className="space-y-1 sm:col-span-2">
           <span className="text-xs text-muted">Nom, personnage, numéro (français ou japonais)</span>
           <input name="q" defaultValue={sp.q} className="field" placeholder="孫悟空, Vegeta, SDV8-035…" />
@@ -99,11 +99,11 @@ export default async function CartesPage({ searchParams }: { searchParams: Promi
         <label className="flex items-center gap-2 text-sm"><input type="checkbox" name="parallele" value="1" defaultChecked={sp.parallele === "1"} /> Parallèles uniquement</label>
         <div className="flex items-end gap-2 sm:col-span-2 lg:col-span-3 lg:justify-end">
           {filtered && <Link href="/cartes" className="rounded-lg px-3 py-2.5 text-sm text-muted hover:text-ink">Effacer</Link>}
-          <button className="rounded-lg bg-gold px-4 py-2.5 font-semibold text-[#11121a]">Rechercher</button>
+          <button className="btn-main px-4 py-2.5 text-sm">Rechercher</button>
         </div>
       </form>
 
-      <details className="mb-6 rounded-xl border border-line bg-surface px-4 py-3 text-sm">
+      <details className="mb-6 panel panel-sm px-4 py-3 text-sm">
         <summary className="cursor-pointer text-muted">Chercher sur les places de marché japonaises ({jpTerms})</summary>
         <div className="mt-3 flex flex-wrap gap-2">
           {marketSearchLinks(jpTerms).map((l) => <a key={l.url} href={l.url} target="_blank" rel="noreferrer" className="rounded-full border border-line px-3 py-1 hover:border-gold">{l.label}</a>)}
