@@ -8,7 +8,7 @@ export const NAV = [
   { href: "/sorties", label: "Sorties", short: "Sorties", icon: CalendarDays, mobile: true },
   { href: "/series", label: "Séries", short: "Séries", icon: Library },
   { href: "/cartes", label: "Cartes de borne", short: "Cartes", icon: Layers, mobile: true },
-  { href: "/advance-packs", label: "Advance Packs", short: "Packs", icon: PackageOpen },
+  { href: "/advance-packs", label: "Produits et packs", short: "Produits", icon: PackageOpen },
   { href: "/boutiques", label: "Boutiques", short: "Boutiques", icon: Store },
   { href: "/prix", label: "Prix", short: "Prix", icon: ChartLine },
   { href: "/collection", label: "Ma collection", short: "Collection", icon: BookOpenCheck, mobile: true },
