@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Countdown } from "@/components/countdown";
 import { RarityBadge } from "@/components/rarity-badge";
 import { Empty, Panel } from "@/components/panel";
-import { Radar } from "@/components/radar";
 import { ReliabilityBadge } from "@/components/reliability-badge";
 import {
   formatDate, formatMoney, formatRelative, jpyToEur,
@@ -92,7 +91,7 @@ export default async function Dashboard() {
 
       <div className="grid gap-5 lg:grid-cols-[1.65fr_1fr]">
         {/* Prochaine sortie */}
-        <section className="dive relative overflow-hidden rounded-[22px] border border-line p-6 sm:p-8">
+        <section className="panel panel-hero burst p-6 sm:p-8">
           {heroImage && (
             <>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -100,16 +99,14 @@ export default async function Dashboard() {
               <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,var(--surface)_0%,color-mix(in_oklab,var(--surface)_85%,transparent)_45%,transparent_100%)]" />
             </>
           )}
-          <div className="pointer-events-none absolute -right-16 -top-16 h-72 w-72 opacity-45 sm:-right-10 sm:opacity-90 sm:-top-10 sm:h-80 sm:w-80">
-            {!heroImage && <Radar blips={releases.data?.length ?? 0} />}
-          </div>
+          <span aria-hidden className="sfx pointer-events-none absolute bottom-5 right-6 hidden text-[4.2rem] md:block xl:text-[5rem]">ゴォッ!!</span>
           <div className="relative">
-            <p className="text-sm text-muted">Prochaine sortie</p>
+            <p className="inline-block -rotate-2 bg-ink px-2 py-0.5 font-display text-sm text-bg">Prochaine sortie</p>
             {releases.error ? (
               <Failed message={releases.error.message} />
             ) : next ? (
               <>
-                <h2 className="mt-2 max-w-[22ch] text-[1.7rem] font-semibold leading-tight tracking-tight sm:text-[2.1rem]">
+                <h2 className="mt-2 max-w-[18ch] text-[1.8rem] leading-tight sm:text-[2.4rem]">
                   {next.set_name ?? next.product_name}
                 </h2>
                 <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted">
