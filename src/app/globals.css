@@ -2,31 +2,44 @@
 
 @custom-variant light (&:where([data-theme=light], [data-theme=light] *));
 
+/* Direction artistique « Plongée » : un HUD de borne d'arcade sur fond abyssal,
+   éclairé par l'aura orangée et l'or des cartes rares. Création originale,
+   sans logo ni visuel officiel. */
 :root {
-  --bg: #16171a;
-  --surface: #1e2025;
-  --surface-2: #262931;
-  --line: #30333b;
-  --ink: #edebe6;
-  --muted: #9a9da6;
-  --gold: #e9b63b;
-  --orange: #f2892b;
+  --bg: #11121a;
+  --surface: #191b26;
+  --surface-2: #232636;
+  --line: #2d3145;
+  --ink: #eeece6;
+  --muted: #9599aa;
+  --gold: #f2c14e;
+  --orange: #ff8a1f;
+  --ki: #45b3ff;
   --up: #4dc48c;
-  --down: #ea5a50;
+  --down: #ff5a5f;
+  --r-gdr: #f2c14e;
+  --r-sec: #ff8a1f;
+  --r-exr: #ff4d6a;
+  --r-pur: #b07cff;
   color-scheme: dark;
 }
 
 [data-theme="light"] {
-  --bg: #f3f4f6;
+  --bg: #f2f3f7;
   --surface: #ffffff;
-  --surface-2: #eceef1;
-  --line: #dadde3;
-  --ink: #17181c;
-  --muted: #5e626c;
+  --surface-2: #e9ebf2;
+  --line: #d6d9e3;
+  --ink: #15161d;
+  --muted: #5b5f6e;
   --gold: #a87712;
-  --orange: #c9640a;
+  --orange: #d0650a;
+  --ki: #1a78c9;
   --up: #1f8a57;
-  --down: #c2372e;
+  --down: #c8323a;
+  --r-gdr: #a87712;
+  --r-sec: #d0650a;
+  --r-exr: #c8253f;
+  --r-pur: #7a45d6;
   color-scheme: light;
 }
 
@@ -39,9 +52,11 @@
   --color-muted: var(--muted);
   --color-gold: var(--gold);
   --color-orange: var(--orange);
+  --color-ki: var(--ki);
   --color-up: var(--up);
   --color-down: var(--down);
   --font-sans: var(--font-latin), var(--font-jp), system-ui, sans-serif;
+  --font-display: var(--font-hud), var(--font-jp), system-ui, sans-serif;
 }
 
 html {
@@ -51,9 +66,13 @@ html {
 body {
   background: var(--bg);
   color: var(--ink);
-  font-feature-settings: "ss01";
   -webkit-font-smoothing: antialiased;
   padding-top: env(safe-area-inset-top, 0px);
+}
+
+h1, h2, .font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
 }
 
 .tabular {
@@ -64,6 +83,29 @@ body {
   outline: 2px solid var(--gold);
   outline-offset: 2px;
   border-radius: 6px;
+}
+
+/* Champ de saisie commun */
+.field {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  padding: 0.6rem 0.75rem;
+  color: var(--ink);
+  outline: none;
+}
+.field:focus {
+  border-color: var(--gold);
+}
+
+/* Traînée d'énergie du bloc principal : seul effet appuyé de l'interface */
+.dive {
+  background:
+    linear-gradient(115deg, transparent 0 52%, color-mix(in oklab, var(--orange) 16%, transparent) 52% 53.5%, transparent 53.5% 60%,
+      color-mix(in oklab, var(--gold) 10%, transparent) 60% 60.8%, transparent 60.8%),
+    radial-gradient(120% 90% at 100% 0%, color-mix(in oklab, var(--orange) 14%, transparent), transparent 55%),
+    var(--surface);
 }
 
 @media (prefers-reduced-motion: reduce) {
