@@ -8,7 +8,7 @@ import { isActive, NavLinks } from "./nav-links";
 import { ThemeToggle } from "./theme-toggle";
 import { Wordmark } from "./wordmark";
 
-export function MobileNav() {
+export function MobileNav({ logoUrl }: { logoUrl?: string | null }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   useEffect(() => setOpen(false), [pathname]);
@@ -16,7 +16,7 @@ export function MobileNav() {
   return (
     <>
       <header className="sticky top-0 z-30 flex items-center justify-between border-b border-line bg-bg/90 px-4 py-3 backdrop-blur lg:hidden">
-        <Wordmark />
+        <Wordmark logoUrl={logoUrl} />
       </header>
 
       <nav
@@ -25,7 +25,7 @@ export function MobileNav() {
         style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       >
         <ul className="grid grid-cols-5">
-          {NAV.filter((n) => "mobile" in n && n.mobile).map(({ href, label, icon: Icon }) => {
+          {NAV.filter((n) => "mobile" in n && n.mobile).map(({ href, short, icon: Icon }) => {
             const active = isActive(pathname, href);
             return (
               <li key={href}>
@@ -35,7 +35,7 @@ export function MobileNav() {
                   className={`flex flex-col items-center gap-1 py-2 text-[0.68rem] ${active ? "text-gold" : "text-muted"}`}
                 >
                   <Icon size={20} aria-hidden />
-                  {label === "Tableau de bord" ? "Accueil" : label.replace("Cartes de borne", "Cartes").replace("Ma collection", "Collection")}
+                  {short}
                 </Link>
               </li>
             );

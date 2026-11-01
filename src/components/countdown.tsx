@@ -29,7 +29,7 @@ export function Countdown({ date }: { date: string }) {
     <div className="flex gap-5 sm:gap-7" role="timer" aria-label={`${parts[0].v} jours et ${parts[1].v} heures avant la sortie`}>
       {parts.map((p, i) => (
         <div key={p.l} className={i === 3 ? "hidden sm:block" : undefined}>
-          <div className="tabular text-[2.6rem] font-semibold leading-none tracking-tight sm:text-[3.4rem]">
+          <div className="font-display tabular text-[2.6rem] font-semibold leading-none tracking-tight sm:text-[3.4rem]">
             {String(p.v).padStart(2, "0")}
           </div>
           <div className="mt-1.5 text-xs text-muted">{p.l}</div>
