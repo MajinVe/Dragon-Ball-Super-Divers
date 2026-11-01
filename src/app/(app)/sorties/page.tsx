@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { PageHeader } from "@/components/page-header";
 import { ReliabilityBadge } from "@/components/reliability-badge";
+import { FEED_KIND, OfficialFeed } from "@/components/official-feed";
+import { getOfficialFeed, refreshOfficialIfStale } from "@/lib/feed";
 import { EVENT_LABEL } from "@/lib/catalogue";
 import { formatDate, type Reliability } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
@@ -15,9 +17,11 @@ type Row = {
   source: { name: string; url: string | null } | null;
 };
 
-export default async function SortiesPage({ searchParams }: { searchParams: Promise<{ region?: string; periode?: string }> }) {
-  const { region = "tout", periode = "avenir" } = await searchParams;
+export default async function SortiesPage({ searchParams }: { searchParams: Promise<{ region?: string; periode?: string; actu?: string }> }) {
+  const { region = "tout", periode = "avenir", actu } = await searchParams;
   const supabase = await createClient();
+  await refreshOfficialIfStale(supabase);
+  const feed = await getOfficialFeed(supabase, 24, actu);
   const today = new Date().toISOString().slice(0, 10);
 
   let q = supabase.from("release_calendar")
@@ -44,6 +48,19 @@ export default async function SortiesPage({ searchParams }: { searchParams: Prom
         <Link href="/saisie?onglet=sortie" className="rounded-lg border border-line px-3 py-2 text-sm hover:border-gold">Ajouter une date</Link>
       </PageHeader>
 
+      <section className="mb-10">
+        <h2 className="mb-3 text-xl">Actus officielles</h2>
+        <div className="mb-4 flex flex-wrap gap-2">
+          <Link href="/sorties" className={`rounded-full border px-3 py-1 text-sm ${!actu ? "border-gold text-gold" : "border-line text-muted hover:text-ink"}`}>Toutes</Link>
+          {Object.entries(FEED_KIND).map(([k, l]) => (
+            <Link key={k} href={`/sorties?actu=${k}`} className={`rounded-full border px-3 py-1 text-sm ${actu === k ? "border-gold text-gold" : "border-line text-muted hover:text-ink"}`}>{l}</Link>
+          ))}
+        </div>
+        <OfficialFeed items={feed} />
+        <p className="mt-3 text-xs text-muted">Vignettes affichées depuis le site officiel ; chaque carte ouvre l’article d’origine. Lecture automatique toutes les 6 heures au plus.</p>
+      </section>
+
+      <h2 className="mb-3 text-xl">Calendrier</h2>
       <div className="mb-6 flex flex-wrap gap-2">
         {chip(qs({ periode: "avenir" }), periode !== "passees", "À venir")}
         {chip(qs({ periode: "passees" }), periode === "passees", "Passées")}
