@@ -36,7 +36,7 @@ export async function rejectAll() {
 }
 
 const KIND_TO_ANNOUNCEMENT: Record<string, string> = {
-  nouvelle_serie: "nouvelle_serie", advance_pack: "advance_pack", produit: "produit", evenement: "evenement", annonce: "autre",
+  nouvelle_serie: "nouvelle_serie", visuels: "cartes", advance_pack: "advance_pack", produit: "produit", evenement: "evenement", annonce: "autre",
 };
 
 /** Valide une détection : l'enregistre comme annonce (ou comme offre si une boutique et une cible sont fournies). */

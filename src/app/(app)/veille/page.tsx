@@ -12,7 +12,7 @@ import { acceptDetection, addWatchSource, rejectAll, rejectDetection, scanNow } 
 export const dynamic = "force-dynamic";
 
 const KIND: Record<string, string> = {
-  nouvelle_serie: "Nouvelle série", advance_pack: "Advance Pack", produit: "Produit", evenement: "Événement", annonce: "Annonce",
+  nouvelle_serie: "Nouvelle série", visuels: "Visuels", advance_pack: "Advance Pack", produit: "Produit", evenement: "Événement", annonce: "Annonce",
 };
 
 function prefillLink(d: { id: string; kind: string; title: string; url: string; published_at: string | null }) {
