@@ -278,9 +278,9 @@ export async function analyzeUrl(_: AnalyzeState, f: FormData): Promise<AnalyzeS
       if (prices.length >= 8) break;
     }
 
-    const cardNumbers = [...new Set([...scan.matchAll(/\b(SDV\d{1,2}-\d{2,3}|DVP-\d{2,3})\b/gi)].map((m) => m[1].toUpperCase()))].slice(0, 5);
+    const cardNumbers = [...new Set([...scan.matchAll(/\b(SDV(?:P[A-Z])?\d{0,2}-(?:SEC)?\d{1,3})\b/gi)].map((m) => m[1].toUpperCase()))].slice(0, 5);
     const rarities = [...new Set([...scan.matchAll(/\b(GDR|SEC|EXR|PUR)\b/g)].map((m) => m[1]))];
-    const parallel = /パラレル|parall[eè]le|parallel/i.test(scan);
+    const parallel = /パラレル|parall[eè]le|parallel|(GDR|SEC|UR)★/i.test(scan);
 
     const data: Extracted = {
       ...base, title: title ? decode(title).trim() : null, image, prices, cardNumbers, rarities, parallel,

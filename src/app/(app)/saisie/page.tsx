@@ -64,7 +64,7 @@ export default async function SaisiePage({ searchParams }: { searchParams: Promi
         ))}
       </nav>
 
-      <section className="max-w-3xl rounded-2xl border border-line bg-surface p-5 sm:p-6">
+      <section className="max-w-3xl panel p-5 sm:p-6">
         {onglet === "assistee" && <AssistedEntry stores={storeOpts} products={productOpts} initialCard={carte} />}
 
         {onglet === "serie" && (
