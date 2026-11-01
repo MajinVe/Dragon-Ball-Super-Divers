@@ -45,7 +45,7 @@ export default async function CarteDetail({ params }: { params: Promise<{ id: st
     <div>
       <PageHeader title={cardName(c)} intro={c.name_fr ? c.name_ja : undefined}>
         <div className="flex flex-wrap gap-2">
-          <Link href={`/saisie?onglet=assistee&carte=${encodeURIComponent(c.card_number)}`} className="rounded-lg bg-gold px-3 py-2 text-sm font-semibold text-[#11121a]">Ajouter un prix</Link>
+          <Link href={`/saisie?onglet=assistee&carte=${encodeURIComponent(c.card_number)}`} className="btn-main px-3 py-2 text-sm">Ajouter un prix</Link>
         </div>
       </PageHeader>
 
@@ -59,7 +59,7 @@ export default async function CarteDetail({ params }: { params: Promise<{ id: st
               <div className="flex aspect-[5/7] items-center justify-center text-sm text-muted">Pas d’image enregistrée</div>
             )}
           </div>
-          <dl className="space-y-2 rounded-2xl border border-line bg-surface p-4 text-sm">
+          <dl className="space-y-2 panel p-4 text-sm">
             <div className="flex justify-between gap-3"><dt className="text-muted">Numéro</dt><dd className="font-display tabular">{c.card_number}{c.variant ? ` (${c.variant})` : ""}</dd></div>
             <div className="flex justify-between gap-3"><dt className="text-muted">Rareté</dt><dd><RarityBadge code={c.rarity_code} parallel={c.is_parallel} /></dd></div>
             <div className="flex justify-between gap-3"><dt className="text-muted">Série</dt><dd>{set ? <Link href={`/series/${encodeURIComponent(set.code)}`} className="hover:text-gold">{set.code}</Link> : "—"}</dd></div>
@@ -71,7 +71,7 @@ export default async function CarteDetail({ params }: { params: Promise<{ id: st
         </div>
 
         <div className="space-y-6">
-          <section className="dive rounded-2xl border border-line p-5">
+          <section className="panel burst p-5">
             <p className="text-sm text-muted">Cote estimée</p>
             <p className="font-display tabular mt-1 text-4xl font-semibold">{val?.valeur_estimee_eur != null ? formatMoney(val.valeur_estimee_eur, "EUR") : "—"}</p>
             <p className="mt-1 text-sm text-muted">{BASIS[val?.base_valorisation ?? "aucune_donnee"]}{val?.nb_ventes_90j ? `, ${val.nb_ventes_90j} vente(s)` : ""}</p>
@@ -98,7 +98,7 @@ export default async function CarteDetail({ params }: { params: Promise<{ id: st
             <p className="mt-3 text-xs text-muted">Prix convertis au taux BCE du jour de chaque observation. Cartes gradées exclues de ces statistiques.</p>
           </section>
 
-          <section className="rounded-2xl border border-line bg-surface p-5">
+          <section className="panel p-5">
             <h2 className="mb-3 text-lg font-semibold">Annonces actives</h2>
             {listings?.length ? (
               <ul className="divide-y divide-line">
@@ -118,7 +118,7 @@ export default async function CarteDetail({ params }: { params: Promise<{ id: st
             ) : <p className="text-sm text-muted">Aucune annonce enregistrée.</p>}
           </section>
 
-          <section className="rounded-2xl border border-line bg-surface p-5">
+          <section className="panel p-5">
             <h2 className="mb-3 text-lg font-semibold">Historique des prix</h2>
             {hist?.length ? (
               <div className="overflow-x-auto">
@@ -141,7 +141,7 @@ export default async function CarteDetail({ params }: { params: Promise<{ id: st
           </section>
 
           {inProducts && inProducts.length > 0 && (
-            <section className="rounded-2xl border border-line bg-surface p-5">
+            <section className="panel p-5">
               <h2 className="mb-3 text-lg font-semibold">Présente dans</h2>
               {inProducts.map((pc, i) => {
                 const p = pc.product as unknown as { id: string; name_ja: string; name_fr: string | null; type: string };
@@ -150,7 +150,7 @@ export default async function CarteDetail({ params }: { params: Promise<{ id: st
             </section>
           )}
 
-          <section className="rounded-2xl border border-line bg-surface p-5">
+          <section className="panel p-5">
             <h2 className="mb-1 text-lg font-semibold">Chercher cette carte</h2>
             <p className="mb-3 text-sm text-muted">Recherche « {terms} »</p>
             <div className="flex flex-wrap gap-2 text-sm">
