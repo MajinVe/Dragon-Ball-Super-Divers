@@ -41,18 +41,18 @@ export default async function SerieDetail({ params, searchParams }: { params: Pr
       </PageHeader>
 
       <div className="mb-8 grid gap-4 md:grid-cols-3">
-        <div className="rounded-2xl border border-line bg-surface p-5">
+        <div className="panel p-5">
           <p className="text-sm text-muted">Catalogue</p>
           <p className="font-display tabular mt-1 text-3xl">{all.length}<span className="text-lg text-muted"> / {st.total_cards ?? "?"}</span></p>
           {src?.url && <a href={src.url} target="_blank" rel="noreferrer" className="mt-2 block text-xs text-muted hover:text-gold">Source : {src.name}</a>}
         </div>
-        <div className="rounded-2xl border border-line bg-surface p-5">
+        <div className="panel p-5">
           <p className="mb-2 text-sm text-muted">Sorties</p>
           {releases?.length ? releases.map((r) => (
             <p key={r.id} className="text-sm">{formatDate(r.event_date, r.precision)} · {r.region === "JP" ? "Japon" : "France"} · {EVENT_LABEL[r.event_type]}{r.is_estimate ? " (estimation)" : ""}</p>
           )) : <p className="text-sm text-muted">Aucune date renseignée.</p>}
         </div>
-        <div className="rounded-2xl border border-line bg-surface p-5">
+        <div className="panel p-5">
           <p className="mb-2 text-sm text-muted">Produits associés</p>
           {products?.length ? products.map((p) => (
             <Link key={p.id} href={`/produits/${p.id}`} className="block text-sm hover:text-gold">{PRODUCT_TYPE_LABEL[p.type]} · {p.name_fr ?? p.name_ja}</Link>
