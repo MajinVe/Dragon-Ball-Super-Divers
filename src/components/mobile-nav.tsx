@@ -8,7 +8,7 @@ import { isActive, NavLinks } from "./nav-links";
 import { ThemeToggle } from "./theme-toggle";
 import { Wordmark } from "./wordmark";
 
-export function MobileNav({ logoUrl }: { logoUrl?: string | null }) {
+export function MobileNav({ logoUrl, pending = 0 }: { logoUrl?: string | null; pending?: number }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   useEffect(() => setOpen(false), [pathname]);
@@ -47,7 +47,10 @@ export function MobileNav({ logoUrl }: { logoUrl?: string | null }) {
               aria-expanded={open}
               className="flex w-full flex-col items-center gap-1 py-2 text-[0.68rem] text-muted"
             >
-              <Menu size={20} aria-hidden />
+              <span className="relative">
+                <Menu size={20} aria-hidden />
+                {pending > 0 && <span className="absolute -right-2 -top-1.5 h-2.5 w-2.5 rounded-full bg-orange" aria-label={`${pending} à valider`} />}
+              </span>
               Plus
             </button>
           </li>
@@ -67,7 +70,7 @@ export function MobileNav({ logoUrl }: { logoUrl?: string | null }) {
                 <X size={20} />
               </button>
             </div>
-            <NavLinks onNavigate={() => setOpen(false)} />
+            <NavLinks onNavigate={() => setOpen(false)} pending={pending} />
             <div className="mt-2 border-t border-line pt-2">
               <ThemeToggle />
               <form action="/auth/signout" method="post">

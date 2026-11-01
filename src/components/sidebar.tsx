@@ -3,14 +3,14 @@ import { NavLinks } from "./nav-links";
 import { ThemeToggle } from "./theme-toggle";
 import { Wordmark } from "./wordmark";
 
-export function Sidebar({ email, logoUrl }: { email: string; logoUrl?: string | null }) {
+export function Sidebar({ email, logoUrl, pending = 0 }: { email: string; logoUrl?: string | null; pending?: number }) {
   return (
-    <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r-2 border-[var(--ink-line)] bg-surface px-3 py-5 lg:flex">
-      <div className="px-3 pb-6">
-        <Wordmark logoUrl={logoUrl} />
+    <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r-2 border-[var(--ink-line)] bg-surface px-3 py-5 lg:flex">
+      <div className="px-2 pb-6">
+        <Wordmark logoUrl={logoUrl} large />
       </div>
       <nav aria-label="Navigation principale" className="flex-1 overflow-y-auto">
-        <NavLinks />
+        <NavLinks pending={pending} />
       </nav>
       <div className="space-y-1 border-t border-line pt-3">
         <ThemeToggle />

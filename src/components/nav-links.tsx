@@ -7,7 +7,7 @@ export function isActive(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname.startsWith(href);
 }
 
-export function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
+export function NavLinks({ onNavigate, pending = 0 }: { onNavigate?: () => void; pending?: number }) {
   const pathname = usePathname();
   return (
     <ul className="space-y-0.5">
@@ -24,7 +24,10 @@ export function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
               }`}
             >
               <Icon size={18} aria-hidden className={active ? "text-gold" : undefined} />
-              {label}
+              <span className="flex-1">{label}</span>
+              {href === "/veille" && pending > 0 && (
+                <span className="font-display rounded-[3px] bg-orange px-1.5 text-xs leading-5 text-[#141414]">{pending}</span>
+              )}
             </Link>
           </li>
         );

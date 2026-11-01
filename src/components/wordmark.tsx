@@ -1,9 +1,9 @@
-export function Wordmark({ logoUrl }: { logoUrl?: string | null }) {
+export function Wordmark({ logoUrl, large = false }: { logoUrl?: string | null; large?: boolean }) {
   if (logoUrl) {
     return (
       <div className="flex items-center gap-2.5">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={logoUrl} alt="Accueil" className="h-9 w-auto max-w-[170px] object-contain" />
+        <img src={logoUrl} alt="Accueil" className={large ? "h-24 w-auto max-w-[220px] object-contain" : "h-12 w-auto max-w-[190px] object-contain"} />
       </div>
     );
   }
