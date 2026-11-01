@@ -20,7 +20,7 @@ const TABS = [
   ["annonce", "Annonce"],
 ] as const;
 
-type Prefill = { onglet?: string; carte?: string; code?: string; num?: string; nom?: string; source?: string; date?: string; detection?: string; type?: string };
+type Prefill = { onglet?: string; carte?: string; code?: string; num?: string; nom?: string; nomfr?: string; source?: string; date?: string; detection?: string; type?: string };
 
 export default async function SaisiePage({ searchParams }: { searchParams: Promise<Prefill> }) {
   const sp = await searchParams;
@@ -76,7 +76,7 @@ export default async function SaisiePage({ searchParams }: { searchParams: Promi
             <Grid>
               <Field label="Code" hint="Tel qu’il apparaît dans les numéros, ex. SDV8"><input name="code" required defaultValue={sp.code ?? ""} className="field" /></Field>
               <Field label="Numéro de série (弾)"><input name="series_number" inputMode="numeric" defaultValue={sp.num ?? ""} className="field" /></Field>
-              <Field label="Nom japonais officiel" hint={sp.nom ? `Titre de l’actualité : ${sp.nom}` : undefined}><input name="name_ja" required defaultValue={sp.num ? `${sp.num}弾` : ""} className="field" /></Field>
+              <Field label="Nom japonais officiel" hint={sp.nom ? `Titre de l’actualité : ${sp.nomfr ?? sp.nom}` : undefined}><input name="name_ja" required defaultValue={sp.num ? `${sp.num}弾` : ""} className="field" /></Field>
               <Field label="Nom français (si disponible)"><input name="name_fr" defaultValue={sp.num ? `Série ${sp.num}` : ""} className="field" /></Field>
               <Field label="Nombre total de cartes annoncé"><input name="total_cards" inputMode="numeric" className="field" /></Field>
               <Field label="Date de publication de l’info"><input name="published_at" type="date" defaultValue={sp.date ?? ""} className="field" /></Field>
@@ -134,7 +134,7 @@ export default async function SaisiePage({ searchParams }: { searchParams: Promi
               </Field>
               <Field label="Série liée"><SetSelect /></Field>
               <Field label="Nom japonais officiel"><input name="name_ja" required defaultValue={onglet === "produit" ? sp.nom ?? "" : ""} className="field" /></Field>
-              <Field label="Nom français"><input name="name_fr" className="field" /></Field>
+              <Field label="Nom français"><input name="name_fr" defaultValue={onglet === "produit" ? sp.nomfr ?? "" : ""} className="field" /></Field>
               <Field label="Prix officiel japonais (¥, TTC)"><input name="official_price_jpy" inputMode="numeric" className="field" /></Field>
               <Field label="Cartes par unité"><input name="cards_per_unit" inputMode="numeric" className="field" /></Field>
               <Field label="Statut">
