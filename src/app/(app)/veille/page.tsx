@@ -22,7 +22,15 @@ function prefillLink(d: { id: string; kind: string; title: string; title_fr: str
     return { label: "Créer la série", href: `/saisie?${new URLSearchParams({ onglet: "serie", ...base, ...(n ? { code: `SDV${n}`, num: n } : {}) })}` };
   }
   if (d.kind === "advance_pack" || d.kind === "produit") {
-    return { label: "Créer le produit", href: `/saisie?${new URLSearchParams({ onglet: "produit", type: d.kind === "advance_pack" ? "advance_pack" : "autre", ...base })}` };
+    const t = d.title;
+    const type = d.kind === "advance_pack" ? "advance_pack"
+      : /ファーストパック|first\s*pack/i.test(t) ? "first_pack"
+      : /SET|セット|BOX|ボックス/i.test(t) ? "coffret"
+      : /限定|リミテッド|limited/i.test(t) ? "edition_limitee"
+      : /スリーブ|ファイル|バインダー|グッズ/.test(t) ? "accessoire"
+      : /Vジャンプ|V-?jump|最強ジャンプ|攻略本|ガイド/i.test(t) ? "livre"
+      : /イベント|大会/.test(t) ? "evenementiel" : "autre";
+    return { label: "Créer le produit", href: `/saisie?${new URLSearchParams({ onglet: "produit", type, ...base })}` };
   }
   return null;
 }
