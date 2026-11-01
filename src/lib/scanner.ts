@@ -123,11 +123,9 @@ export async function scanSource(supabase: SupabaseClient, src: Source) {
     }
     const kws = (src.keywords ?? "").split(",").map((k) => k.trim().toLowerCase()).filter(Boolean);
     if (kws.length) found = found.filter((f) => kws.some((k) => f.title.toLowerCase().includes(k)));
-    if (!src.last_scan_at) {
-      // Premier passage : on ne propose que les nouveautés récentes, pas tout l'historique
-      const limit = new Date(Date.now() - 45 * 864e5).toISOString().slice(0, 10);
-      found = found.filter((f) => !f.published_at || f.published_at >= limit);
-    }
+    // On ne propose que les nouveautés des 45 derniers jours, jamais tout l'historique du site
+    const limit = new Date(Date.now() - 45 * 864e5).toISOString().slice(0, 10);
+    found = found.filter((f) => !f.published_at || f.published_at >= limit);
     found = found.slice(0, 120);
 
     let created = 0;
