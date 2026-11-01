@@ -27,7 +27,7 @@ export default async function SeriesPage() {
           const rel = releases?.find((r) => r.set_id === st.id);
           const pct = st.total_cards ? Math.min(100, Math.round((count / st.total_cards) * 100)) : null;
           return (
-            <Link key={st.id} href={`/series/${encodeURIComponent(st.code)}`} className="group rounded-2xl border border-line bg-surface p-5 hover:border-gold/60">
+            <Link key={st.id} href={`/series/${encodeURIComponent(st.code)}`} className="group panel p-5 panel-hover">
               <div className="flex items-start justify-between gap-3">
                 <span className="font-display text-3xl font-semibold text-gold">{st.code}</span>
                 <ReliabilityBadge level={st.reliability as Reliability} />
