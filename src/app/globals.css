@@ -115,6 +115,9 @@ h1::after {
   border-radius: 4px;
 }
 
+/* Classes de composants dans une couche dédiée : les utilitaires Tailwind
+   (bg-orange, text-…) restent prioritaires et peuvent les surcharger. */
+@layer components {
 /* Case de manga : bord encré + ombre portée franche */
 .panel {
   position: relative;
@@ -225,6 +228,8 @@ h1::after {
   border-right: 2px solid var(--ink-line);
   border-bottom: 2px solid var(--ink-line);
   transform: rotate(45deg) skew(10deg, 10deg);
+}
+
 }
 
 @media (prefers-reduced-motion: reduce) {
