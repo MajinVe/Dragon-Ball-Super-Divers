@@ -35,7 +35,7 @@ export default async function ProduitDetail({ params }: { params: Promise<{ id: 
   return (
     <div>
       <PageHeader title={p.name_fr ?? p.name_ja} intro={p.name_fr ? p.name_ja : undefined}>
-        <Link href="/saisie?onglet=assistee" className="rounded-lg bg-gold px-3 py-2 text-sm font-semibold text-[#11121a]">Ajouter une offre</Link>
+        <Link href="/saisie?onglet=assistee" className="btn-main px-3 py-2 text-sm">Ajouter une offre</Link>
       </PageHeader>
 
       <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
@@ -46,7 +46,7 @@ export default async function ProduitDetail({ params }: { params: Promise<{ id: 
               <img src={p.image_url} alt="" className="w-full object-cover" />
             ) : <div className="flex aspect-square items-center justify-center text-sm text-muted">Sans visuel</div>}
           </div>
-          <dl className="space-y-2 rounded-2xl border border-line bg-surface p-4 text-sm">
+          <dl className="space-y-2 panel p-4 text-sm">
             <div className="flex justify-between gap-3"><dt className="text-muted">Type</dt><dd>{PRODUCT_TYPE_LABEL[p.type]}</dd></div>
             <div className="flex justify-between gap-3"><dt className="text-muted">Statut</dt><dd>{PRODUCT_STATUS_LABEL[p.status]}</dd></div>
             <div className="flex justify-between gap-3"><dt className="text-muted">Série</dt><dd>{set ? <Link href={`/series/${encodeURIComponent(set.code)}`} className="hover:text-gold">{set.code}</Link> : "—"}</dd></div>
@@ -59,7 +59,7 @@ export default async function ProduitDetail({ params }: { params: Promise<{ id: 
         </div>
 
         <div className="space-y-6">
-          <section className="dive rounded-2xl border border-line p-5">
+          <section className="panel burst p-5">
             <p className="text-sm text-muted">Valeur estimée</p>
             <p className="font-display tabular mt-1 text-4xl font-semibold">{val?.valeur_estimee_eur != null ? formatMoney(val.valeur_estimee_eur, "EUR") : "—"}</p>
             <p className="mt-1 text-sm text-muted">{val?.base_valorisation === "ventes_conclues" ? "Médiane des ventes conclues sur 90 jours" : val?.base_valorisation === "annonces" ? "Plus bas prix affiché sur 30 jours" : "Aucune donnée de prix fiable"}</p>
@@ -71,13 +71,13 @@ export default async function ProduitDetail({ params }: { params: Promise<{ id: 
           </section>
 
           {p.contents && (
-            <section className="rounded-2xl border border-line bg-surface p-5">
+            <section className="panel p-5">
               <h2 className="mb-2 text-lg font-semibold">Contenu</h2>
               <p className="whitespace-pre-line text-sm leading-relaxed">{p.contents}</p>
             </section>
           )}
 
-          <section className="rounded-2xl border border-line bg-surface p-5">
+          <section className="panel p-5">
             <h2 className="mb-3 text-lg font-semibold">Offres des boutiques</h2>
             {offers.length ? (
               <ul className="divide-y divide-line">
@@ -95,7 +95,7 @@ export default async function ProduitDetail({ params }: { params: Promise<{ id: 
           </section>
 
           {cards.length > 0 && (
-            <section className="rounded-2xl border border-line bg-surface p-5">
+            <section className="panel p-5">
               <h2 className="mb-3 text-lg font-semibold">Cartes incluses</h2>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
                 {cards.map((c) => <CardTile key={c.id} card={c} />)}
@@ -103,7 +103,7 @@ export default async function ProduitDetail({ params }: { params: Promise<{ id: 
             </section>
           )}
 
-          <section className="rounded-2xl border border-line bg-surface p-5">
+          <section className="panel p-5">
             <h2 className="mb-3 text-lg font-semibold">Historique des prix</h2>
             {hist?.length ? (
               <ul className="divide-y divide-line text-sm">
@@ -117,7 +117,7 @@ export default async function ProduitDetail({ params }: { params: Promise<{ id: 
             ) : <p className="text-sm text-muted">Aucun prix relevé.</p>}
           </section>
 
-          <section className="rounded-2xl border border-line bg-surface p-5">
+          <section className="panel p-5">
             <h2 className="mb-3 text-lg font-semibold">Chercher ce produit</h2>
             <div className="flex flex-wrap gap-2 text-sm">
               {marketSearchLinks(p.jan_code ?? `スーパーダイバーズ ${p.name_ja}`).map((l) => <a key={l.url} href={l.url} target="_blank" rel="noreferrer" className="rounded-full border border-line px-3 py-1 hover:border-gold">{l.label}</a>)}
